@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Campus Service AI Chatbot</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial;
+}
+
+body{
+    background:linear-gradient(135deg,#1e3c72,#2a5298);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.container{
+    width:1150px;
+    height:680px;
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    display:flex;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+.sidebar{
+    width:300px;
+    background:#0f172a;
+    color:white;
+    padding:20px;
+}
+
+.logo{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.logo img{
+    width:85px;
+}
+
+.sidebar h2{
+    text-align:center;
+    color:#38bdf8;
+    margin-bottom:20px;
+}
+
+.menu{
+    height:520px;
+    overflow-y:auto;
+}
+
+.menu button{
+    width:100%;
+    padding:14px;
+    margin-bottom:10px;
+    border:none;
+    border-radius:10px;
+    background:#1e293b;
+    color:white;
+    cursor:pointer;
+    font-size:15px;
+    transition:0.3s;
+}
+
+.menu button:hover{
+    background:#38bdf8;
+    color:black;
+}
+
+.main{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    background:#f8fafc;
+}
+
+.header{
+    background:#2563eb;
+    color:white;
+    padding:20px;
+    text-align:center;
+    font-size:28px;
+    font-weight:bold;
+}
+
+.info{
+    padding:18px;
+    line-height:1.7;
+    background:white;
+    margin:15px;
+    border-radius:15px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.chat-container{
+    flex:1;
+    padding:20px;
+    overflow-y:auto;
+}
+
+.message{
+    margin-bottom:20px;
+    display:flex;
+}
+
+.bot-message{
+    justify-content:flex-start;
+}
+
+.user-message{
+    justify-content:flex-end;
+}
+
+.bubble{
+    max-width:70%;
+    padding:15px;
+    border-radius:15px;
+    font-size:15px;
+    line-height:1.6;
+}
+
+.bot{
+    background:white;
+    border:1px solid #ddd;
+}
+
+.user{
+    background:#2563eb;
+    color:white;
+}
+
+.input-area{
+    display:flex;
+    padding:15px;
+    background:white;
+    border-top:1px solid #ddd;
+}
+
+.input-area input{
+    flex:1;
+    padding:15px;
+    border:1px solid #ccc;
+    border-radius:10px;
+    outline:none;
+    font-size:16px;
+}
+
+.input-area button{
+    margin-left:10px;
+    padding:15px 25px;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.input-area button:hover{
+    background:#1d4ed8;
+}
+
+.footer{
+    text-align:center;
+    padding:10px;
+    background:white;
+    color:gray;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="sidebar">
+
+<div class="logo">
+<img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png">
+</div>
+
+<h2>Campus Services</h2>
+
+<div class="menu">
+
+<button onclick="quickReply('hello')">Greeting</button>
+
+<button onclick="quickReply('what is your name')">Bot Name</button>
+
+<button onclick="quickReply('departments available')">Departments</button>
+
+<button onclick="quickReply('about campus')">About Campus</button>
+
+<button onclick="quickReply('admission details')">Admission</button>
+
+<button onclick="quickReply('fee structure')">Fee Structure</button>
+
+<button onclick="quickReply('hostel fees')">Hostel Fees</button>
+
+<button onclick="quickReply('dress code')">Dress Code</button>
+
+<button onclick="quickReply('scholarship details')">Scholarship</button>
+
+<button onclick="quickReply('library timing')">Library</button>
+
+<button onclick="quickReply('hostel details')">Hostel</button>
+
+<button onclick="quickReply('placement details')">Placements</button>
+
+<button onclick="quickReply('exam schedule')">Exams</button>
+
+<button onclick="quickReply('attendance details')">Attendance</button>
+
+</div>
+
+</div>
+
+<div class="main">
+
+<div class="header">
+🎓 Campus Service AI Assistant
+</div>
+
+<div class="info">
+
+🎓 Welcome to Smart Campus Service Chatbot.<br><br>
+
+Ask your questions regarding admissions, fees, hostel,
+departments, placements, exams and campus facilities.
+
+
+</div>
+
+<div class="chat-container" id="chatBox">
+
+<div class="message bot-message">
+
+<div class="bubble bot">
+
+Hello 👋 Welcome to Campus Service Assistant.<br><br>
+
+Ask me about admissions, fees, departments, hostel, dress code, placements, exams and more.
+
+</div>
+
+</div>
+
+</div>
+
+<div class="input-area">
+
+<input type="text" id="userInput" placeholder="Type your question here...">
+
+<button onclick="sendMessage()">Send</button>
+
+</div>
+
+<div class="footer">
+
+AI Powered Smart Campus Assistant
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const chatBox = document.getElementById('chatBox');
+
+function addMessage(message, sender){
+
+    const messageDiv = document.createElement('div');
+
+    messageDiv.classList.add('message');
+
+    if(sender === 'user'){
+        messageDiv.classList.add('user-message');
+    }
+    else{
+        messageDiv.classList.add('bot-message');
+    }
+
+    const bubble = document.createElement('div');
+
+    bubble.classList.add('bubble');
+
+    if(sender === 'user'){
+        bubble.classList.add('user');
+    }
+    else{
+        bubble.classList.add('bot');
+    }
+
+    bubble.innerHTML = message;
+
+    messageDiv.appendChild(bubble);
+
+    chatBox.appendChild(messageDiv);
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function botReply(text){
+
+    text = text.toLowerCase();
+
+    let reply = "Sorry, I did not understand your question.";
+
+    // Greeting
+
+    if(text.includes('hello') || text.includes('hi')){
+
+        reply = "Hello 👋 Welcome to Campus Service AI Assistant.";
+
+    }
+
+    // Bot Name
+
+    else if(text.includes('your name')){
+
+        reply = "I am Campus Service AI Assistant.";
+
+    }
+
+    // Departments
+
+    else if(text.includes('department')){
+
+        reply = `
+        📘 Available Departments:<br><br>
+
+        ✅ Computer Science Engineering (CSE)<br>
+        ✅ Electronics & Communication Engineering (ECE)<br>
+        ✅ Mechanical Engineering<br>
+        ✅ Civil Engineering<br>
+        ✅ Electrical Engineering<br>
+        ✅ MBA<br>
+        ✅ MCA
+        `;
+
+    }
+
+    // About Campus
+
+    else if(text.includes('about campus') || text.includes('campus information')){
+
+        reply = `
+        🎓 About Campus:<br><br>
+
+        Our campus provides modern classrooms, laboratories,
+        smart libraries, sports facilities, hostels,
+        transportation, cafeteria, and placement support.<br><br>
+
+        The environment is eco-friendly and student-friendly.
+        `;
+
+    }
+
+    // Admission
+
+    else if(text.includes('admission')){
+
+        reply = `
+        📝 Admission Details:<br><br>
+
+        Admissions are currently open for all departments.<br><br>
+
+        Required Documents:<br>
+        ✅ 10th Marksheet<br>
+        ✅ 12th Marksheet<br>
+        ✅ Aadhaar Card<br>
+        ✅ Passport Photo
+        `;
+
+    }
+
+    // Fee Structure
+
+    else if(text.includes('fee structure') || text.includes('college fees')){
+
+        reply = `
+        💰 Fee Structure:<br><br>
+
+        ✅ CSE : ₹85,000/year<br>
+        ✅ ECE : ₹80,000/year<br>
+        ✅ Mechanical : ₹75,000/year<br>
+        ✅ Civil : ₹70,000/year<br>
+        ✅ MBA : ₹90,000/year
+        `;
+
+    }
+
+    // Hostel Fees
+
+    else if(text.includes('hostel fees') || text.includes('hostel fee')){
+
+        reply = `
+        🏠 Hostel Fees:<br><br>
+
+        ✅ Boys Hostel : ₹45,000/year<br>
+        ✅ Girls Hostel : ₹48,000/year<br>
+        ✅ Mess Charges : ₹25,000/year<br><br>
+
+        Facilities include WiFi, water, security and laundry.
+        `;
+
+    }
+
+    // Dress Code
+
+    else if(text.includes('dress code')){
+
+        reply = `
+        👔 Dress Code:<br><br>
+
+        ✅ Formal dress or college uniform mandatory.<br>
+        ✅ ID card compulsory.<br>
+        ✅ Shoes required during class hours.<br>
+        ❌ Casual inappropriate dresses not allowed.
+        `;
+
+    }
+
+    // Scholarship
+
+    else if(text.includes('scholarship')){
+
+        reply = `
+        🎓 Scholarship Details:<br><br>
+
+        Scholarships are available for eligible students based on:
+        <br><br>
+
+        ✅ Merit<br>
+        ✅ Category<br>
+        ✅ Income Criteria
+        `;
+
+    }
+
+    // Library
+
+    else if(text.includes('library')){
+
+        reply = `
+        📚 Library Timing:<br><br>
+
+        Monday - Saturday<br>
+        🕗 8 AM to 8 PM
+        `;
+
+    }
+
+    // Hostel
+
+    else if(text.includes('hostel')){
+
+        reply = `
+        🏠 Hostel Facilities:<br><br>
+
+        ✅ Separate hostels for boys and girls<br>
+        ✅ WiFi<br>
+        ✅ 24x7 Security<br>
+        ✅ Mess Facility
+        `;
+
+    }
+
+    // Placement
+
+    else if(text.includes('placement')){
+
+        reply = `
+        💼 Placement Details:<br><br>
+
+        Top companies visit every year.<br><br>
+
+        ✅ Infosys<br>
+        ✅ TCS<br>
+        ✅ Wipro<br>
+        ✅ Accenture
+        `;
+
+    }
+
+    // Exams
+
+    else if(text.includes('exam')){
+
+        reply = `
+        📝 Exam Schedule:<br><br>
+
+        Semester examinations will start from next month.<br>
+        Check notice board regularly.
+        `;
+
+    }
+
+    // Attendance
+
+    else if(text.includes('attendance')){
+
+        reply = `
+        📊 Attendance Details:<br><br>
+
+        Students must maintain minimum 75% attendance.
+        `;
+
+    }
+
+    setTimeout(() => {
+
+        addMessage(reply,'bot');
+
+    },500);
+
+}
+
+function sendMessage(){
+
+    const input = document.getElementById('userInput');
+
+    const text = input.value.trim();
+
+    if(text === ''){
+        return;
+    }
+
+    addMessage(text,'user');
+
+    botReply(text);
+
+    input.value = '';
+
+}
+
+function quickReply(text){
+
+    addMessage(text,'user');
+
+    botReply(text);
+
+}
+
+document.getElementById('userInput').addEventListener('keypress', function(e){
+
+    if(e.key === 'Enter'){
+        sendMessage();
+    }
+
+});
+
+</script>
+
+</body>
+</html>
