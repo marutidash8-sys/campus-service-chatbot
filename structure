@@ -1,0 +1,28 @@
+campus-service-chatbot/
+│
+├── index.html
+├── README.md
+├── LICENSE
+├── .gitignore
+│
+├── css/
+│   └── style.css
+│
+├── js/
+│   └── script.js
+│
+├── images/
+│   ├── logo.png
+│   ├── campus.jpg
+│   └── chatbot-icon.png
+│
+├── pages/
+│   ├── admission.html
+│   ├── hostel.html
+│   ├── placement.html
+│   ├── scholarship.html
+│   └── contact.html
+│
+└── assets/
+    ├── fonts/
+    └── icons/
